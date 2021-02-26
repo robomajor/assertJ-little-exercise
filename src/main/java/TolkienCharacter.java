@@ -6,7 +6,9 @@ public class TolkienCharacter {
     private final Race race;
 
     public TolkienCharacter(String name, int age, Race race) {
+        if (name == null) throw new IllegalArgumentException("Name cannot be left blank!");
         this.name = name;
+        if (age < 0) throw new IllegalArgumentException("Age cannot be less than zero!");
         this.age = age;
         this.race = race;
     }

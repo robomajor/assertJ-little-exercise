@@ -43,6 +43,32 @@ class TolkienCharacterTest implements WithAssertions {
     }
 
     @Test
+    void some_assertions_about_races_in_fellowship() {
+        // filters use introspection to get property/field values
+        assertThat(fellowshipOfTheRing).filteredOn("race", Race.HOBBIT)
+                .containsOnly(sam, frodo, pippin, merry);
+
+        // nested properties are supported
+        assertThat(fellowshipOfTheRing).filteredOn("race.name", "MAN")
+                .containsOnly(aragorn, boromir);
+
+        // you can apply different comparison
+        assertThat(fellowshipOfTheRing).filteredOn("race", notIn(Race.HOBBIT, Race.MAN))
+                .containsOnly(gandalf, gimli, legolas);
+
+        assertThat(fellowshipOfTheRing).filteredOn("race.name", in("MAIAR", "MAN"))
+                .containsOnly(gandalf, boromir, aragorn);
+
+        assertThat(fellowshipOfTheRing).filteredOn("race", not(Race.HOBBIT))
+                .containsOnly(gandalf, boromir, aragorn, gimli, legolas);
+
+        // you can chain multiple filter criteria
+        assertThat(fellowshipOfTheRing).filteredOn("race.name", "MAN")
+                .filteredOn("name", not("Boromir"))
+                .containsOnly(aragorn);
+    }
+
+    @Test
     void frodo_is_not_sauron() {
         assertThat(frodo.getName()).isEqualTo("Frodo");
         assertThat(frodo).isNotEqualTo(sauron);
