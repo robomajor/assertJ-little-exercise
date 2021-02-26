@@ -100,6 +100,13 @@ class TolkienCharacterTest implements WithAssertions {
     }
 
     @Test
+    void orcs_are_not_in_fellowship() {
+        // using the 'extracting' feature to check fellowshipOfTheRing character's names
+        assertThat(fellowshipOfTheRing).extracting(TolkienCharacter::getRace)
+                .doesNotContain(Race.valueOf("ORC"));
+    }
+
+    @Test
     void there_are_sam_boromir_and_legolas() {
         // extracting multiple values at once grouped in tuples
         assertThat(fellowshipOfTheRing).extracting("name", "age", "race.name")
@@ -116,12 +123,12 @@ class TolkienCharacterTest implements WithAssertions {
     }
 
     @Test
-    void assertion_about_frodo_and_him_being_a_hobbit() {
+    void assertion_about_frodo_being_a_hobbit() {
         // combining filtering and extraction (yes we can)
         assertThat(fellowshipOfTheRing).filteredOn(character -> character.getName().contains("o"))
                 .containsOnly(aragorn, frodo, legolas, boromir)
                 .extracting(character -> character.getRace().toString())
                 .contains("HOBBIT", "ELF", "MAN");
     }
-    
+
 }
